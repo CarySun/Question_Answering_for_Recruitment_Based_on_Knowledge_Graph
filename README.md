@@ -1,1 +1,20 @@
-# Question_Answering_for_Recruitment_Based_on_Knowledge_Graph
+# Question Answering for Recruitment Based on Knowledge Graph
+##任务计划
+### 一. 所爬取网站
+1. 智联招聘
+2. 前程无忧
+3. 拉勾网
+4. boss直聘
+5. 猎聘网
+6. 实习僧
+7. 大街网
+8. 应届生求职
+
+### 二. 知识图谱构建模块
+- step1: 职位->技能, 工作描述, 公司, 属性(工作地点, 工作经验, 工资)
+- step2: 公司->公司评价标签, 属性(类型, 人数, 官网, 描述, 注册资本, 地址, 工资)
+- step3: 技能节点进行NER, 提取关键词
+- step4: 技能->百度百科信息, 推荐资料节点(视频, 书籍, 网站)
+- step5: 工作描述进行断句以及主谓分析
+ 
+    
