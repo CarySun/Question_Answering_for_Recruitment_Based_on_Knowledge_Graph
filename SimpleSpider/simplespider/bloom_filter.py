@@ -1,7 +1,8 @@
 #!/usr/bin/env python 
 # -*- coding: utf-8 -*-
 # @Author : CarySun
-# @Date : 2019/8/16 
+# @Date : 2019/8/16
+
 import redis
 
 # 设置散列函数的个数
@@ -9,8 +10,7 @@ BLOOMFILTER_HASH_NUMBER = 6
 # # 布隆过滤器设置bit参数，默认30，占用128M空间，去重量在1亿左右
 # 此参数决定了位数组的位数，如果BLOOMFILTER_BIT为30，则位数组
 # 位2的30次方，这将暂用Redis
-# 128s
-# MB的存储空间，url去重数量在1亿左右，
+# 128MB的存储空间，url去重数量在1亿左右，
 # 如果爬取的量在10亿，20
 # 亿或则更高，则需要将此参数调高
 BLOOMFILTER_BIT = 30
@@ -58,8 +58,8 @@ class BloomFilter(object):
         if not value:
             return False
         exist = True
-        for map in self.maps:
-            offset = map.hash(value)
+        for _map in self.maps:
+            offset = _map.hash(value)
             exist = exist & self.server.getbit(self.key, offset)
         return exist == 1
 
@@ -73,14 +73,19 @@ class BloomFilter(object):
             offset = f.hash(value)
             self.server.setbit(self.key, offset, 1)
 
-# 用法
-#client = redis.StrictRedis(host='118.24.255.219', port=6380)
-# bl = BloomFilter(client, 'bl:url')
-# url = 'http://www.wanfangdata.com.cn/details/detaype=conference&id=7363410'
-# bl.insert(url)
-# result = bl.exists(url)
-# print(result)
-# url1 = 'http://www.wanfangdata.com.cn/details/detaype=conference&id=73634101'
-# result = bl.exists(url1)
-# print(result)
 
+if __name__ == '__main__':
+    # 用法127.0.0.1:6379
+    client = redis.StrictRedis(host='localhost', port=6379)
+    bl = BloomFilter(client, 'bl:url')
+    url = 'http://www.wanfangdata.com.cn/details/detaype=conference&id=7363410'
+    bl.insert(url)
+    result = bl.exists(url)
+    print(result)
+    url1 = 'http://www.wanfangdata.com.cn/details/detaype=conference&id=73634101'
+    result = bl.exists(url1)
+    print(result)
+
+    if not bl.exists(url):
+        bl.insert(url)
+        # 同时进行爬虫操作

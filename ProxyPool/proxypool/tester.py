@@ -7,8 +7,8 @@ import asyncio
 import aiohttp
 from aiohttp import ClientError, ClientProxyConnectionError
 
-from proxypool.db import RedisClient
-from proxypool.setting import TEST_URL, VALID_STATUS_CODES, BATCH_TEST_SIZE 
+from .db import RedisClient
+from .setting import TEST_URL, VALID_STATUS_CODES, BATCH_TEST_SIZE
 
 
 class Tester(object):

@@ -5,8 +5,8 @@ from random import choice
 
 import redis
 
-from proxypool.error import PoolEmptyError
-from proxypool.setting import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_KEY, MAX_SCORE, MIN_SCORE, INITIAL_SCORE
+from .error import PoolEmptyError
+from .setting import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_KEY, MAX_SCORE, MIN_SCORE, INITIAL_SCORE
 
 
 class RedisClient(object):
