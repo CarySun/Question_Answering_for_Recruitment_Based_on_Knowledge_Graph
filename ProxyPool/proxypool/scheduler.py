@@ -34,7 +34,7 @@ class Scheduler():
         """
         开启API
         """
-        app.run()
+        app.run(host='0.0.0.0', port=10200)
     
     def run(self):
         print('代理池开始运行')

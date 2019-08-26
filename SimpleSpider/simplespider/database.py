@@ -19,7 +19,29 @@ class MongoDB():
         self.db = self.conn[database]
         self.col = self.db[keyword]
 
+    def insert(self, data):
+
+        # if not re.match('\d+\.\d+\.\d+\.\d+\:\d+', proxy):
+        #     print('代理不符合规范', proxy, '丢弃')
+        #     return
+        # if not self.db.zscore(REDIS_KEY, proxy):
+        #     return self.db.zadd(REDIS_KEY, {proxy:score})
+        # todo 验证职位是否重复?
+        self.col.insert_one(data)
+
+    def delete(self, data):
+        pass
+
+    def seek(self, key_dict):
+        pass
+
+    def count(self):
+        pass
 
 
+if __name__ == '__main__':
+    text = {'name': 'cary', 'age': 25}
+    mongo = MongoDB('test_mongo', 'work')
+    mongo.insert(text)
 
 
