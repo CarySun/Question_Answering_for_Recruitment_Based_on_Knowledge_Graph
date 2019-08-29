@@ -52,6 +52,7 @@ class WebParser(object):
         title = pp.xpath('//*[@class="summary-plane__title"]/text()').extract_first()
         salary = pp.xpath('//*[@class="summary-plane__salary"]/text()').extract_first()
         city = pp.xpath('//*[@class="summary-plane__info"]/li/a/text()').extract_first()
+        # description 结构上比较混乱,先爬取再说
         description = pp.xpath('//*[@class="describtion__detail-content"]').extract()
         #description = ''.join(description).replace("<p>", "").replace("<br>", "").replace("<b>", "").replace("</b>", "").replace("</p>", "\n")
         summary_info = pp.xpath('//*[@class="summary-plane__info"]/li/text()').extract()
