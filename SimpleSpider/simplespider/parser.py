@@ -15,8 +15,8 @@ from database import MongoDB
 from bloom_filter import BloomFilter
 
 class WebParser(object):
-    def __init__(self):
-        self.bloom_filter = BloomFilter(redis.StrictRedis(host='localhost', port=6379), 'job_url_et')
+    def __init__(self, redis_key):
+        self.bloom_filter = BloomFilter(redis.StrictRedis(host='localhost', port=6379), redis_key)
 
 
     def list_zhilian(self, response):
@@ -55,42 +55,44 @@ class WebParser(object):
     def list_lagou(self):
         pass
 
-    def content_zhilian(self, response, database):
+    def content_zhilian(self, response, database, url):
+        url = url
         response.encoding = response.apparent_encoding
         selector = Selector(response)
-        title = selector.xpath('//*[@class="summary-plane__title"]/text()').extract_first()
-        salary = selector.xpath('//*[@class="summary-plane__salary"]/text()').extract_first()
-        city = selector.xpath('//*[@class="summary-plane__info"]/li/a/text()').extract_first()
+        title = selector.xpath('//*[@class="summary-plane__title"]/text()').get()
+        salary = selector.xpath('//*[@class="summary-plane__salary"]/text()').get()
+        city = selector.xpath('//*[@class="summary-plane__info"]/li/a/text()').get()
         # description 结构上比较混乱,先爬取再说
-        description = selector.xpath('//*[@class="describtion__detail-content"]').extract()
-        summary_info = selector.xpath('//*[@class="summary-plane__info"]/li/text()').extract()
+        description = selector.xpath('//*[@class="describtion__detail-content"]').getall()
+        summary_info = selector.xpath('//*[@class="summary-plane__info"]/li/text()').getall()
 
         if len(summary_info) == 3:
-            experience = selector.xpath('//*[@class="summary-plane__info"]/li/text()').extract()[0]
-            education = selector.xpath('//*[@class="summary-plane__info"]/li/text()').extract()[1]
-            data = {"title":title, "salary":salary, "city":city, "experience":experience, "education":education, "description":description}
+            experience = summary_info[0]
+            education = summary_info[1]
+            data = {'url': url, "title":title, "salary":salary, "city":city, "experience":experience, "education":education, "description":description}
         else:
-            data = {"title":title, "salary":salary, "city":city, "summary_info":summary_info, "description":description}
+            data = {'url': url, "title":title, "salary":salary, "city":city, "summary_info":summary_info, "description":description}
 
         database.insert(data)
 
-    def content_qiancheng(self, response, database):
+    def content_qiancheng(self, response, database, url):
+        url = url
         response.encoding = response.apparent_encoding
         selector = Selector(response)
-        title = selector.xpath('//div[@class="cn"]/h1/text()').extract_first()
-        salary = selector.xpath('//div[@class="cn"]/strong/text()').extract_first()
+        title = selector.xpath('//div[@class="cn"]/h1/text()').get()
+        salary = selector.xpath('//div[@class="cn"]/strong/text()').get()
 
         # description 结构上比较混乱,先爬取再说
-        description = selector.xpath('//div[@class="bmsg job_msg inbox"]/*[not(@class)]').getall()
-        summary_info = city = selector.xpath('//p[@class="msg ltype"]/@title').extract_first().split('\xa0\xa0|\xa0\xa0')
+        description = selector.xpath('//div[@class="bmsg job_msg inbox"]').getall()
+        summary_info = city = selector.xpath('//p[@class="msg ltype"]/@title').get().split('\xa0\xa0|\xa0\xa0')
 
         if len(summary_info) >= 3:
             city = summary_info[0]
             experience = summary_info[1]
             education = summary_info[2]
-            data = {"title":title, "salary":salary, "city":city, "experience":experience, "education":education, "description":description}
+            data = {'url': url, "title":title, "salary":salary, "city":city, "experience":experience, "education":education, "description":description}
         else:
-            data = {"title":title, "salary":salary, "summary_info":summary_info, "description":description}
+            data = {'url': url, "title":title, "salary":salary, "summary_info":summary_info, "description":description}
 
         database.insert(data)
 

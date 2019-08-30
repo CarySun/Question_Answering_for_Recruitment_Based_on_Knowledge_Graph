@@ -1,7 +1,7 @@
 # coding:utf-8
 
 import time
-from multiprocessing import Process
+from multiprocessing import Process  # 多进程, 每个进程负责不同的任务
 from .api import app
 from .getter import Getter
 from .tester import Tester

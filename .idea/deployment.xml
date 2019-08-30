@@ -6,6 +6,7 @@
         <serverdata>
           <mappings>
             <mapping deploy="/home/carysun/Projects/Question_Answering_for_Recruitment_Based_on_Knowledge_Graph" local="$PROJECT_DIR$" />
+            <mapping deploy="" local="" />
           </mappings>
         </serverdata>
       </paths>
