@@ -59,10 +59,10 @@ class JobSpider(object):
         self._get_content(database, url_list, web_name='qiancheng')
 
     def crawl_leipin(self, city, keyword):
-        begin_url = "https://www.liepin.com/city-{city}/zhaopin/?d_pageSize=40&jobKind=2&key={keyword}&curPage={page}"
+        begin_url = "https://www.liepin.com/city-{city}/zhaopin/pn{page}/?d_pageSize=40&jobKind=2&key={keyword}"
         database = MongoDB('leipin', self.keywords[keyword])
 
-        url_list = self._get_list(begin_url, city, keyword, page_begin=1, web_name='leipin')
+        url_list = self._get_list(begin_url, city, keyword, page_begin=0, web_name='leipin')
 
         print(keyword, city, 'list parser done!')
         if url_list:
