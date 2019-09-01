@@ -58,17 +58,17 @@ class JobSpider(object):
 
         self._get_content(database, url_list, web_name='qiancheng')
 
-    def crawl_leipin(self, city, keyword):
+    def crawl_liepin(self, city, keyword):
         begin_url = "https://www.liepin.com/city-{city}/zhaopin/pn{page}/?d_pageSize=40&jobKind=2&key={keyword}"
-        database = MongoDB('leipin', self.keywords[keyword])
+        database = MongoDB('liepin', self.keywords[keyword])
 
-        url_list = self._get_list(begin_url, city, keyword, page_begin=0, web_name='leipin')
+        url_list = self._get_list(begin_url, city, keyword, page_begin=0, web_name='liepin')
 
         print(keyword, city, 'list parser done!')
         if url_list:
             print(len(url_list))
 
-        self._get_content(database, url_list, web_name='leipin')
+        self._get_content(database, url_list, web_name='liepin')
 
     def crawl_boss(self):
         pass
@@ -115,14 +115,14 @@ class JobSpider(object):
                                 self.parser.content_zhilian(response, database, url)
                             if web_name == 'qiancheng':
                                 self.parser.content_qiancheng(response, database, url)
-                            if web_name == 'leipin':
+                            if web_name == 'liepin':
                                 self.parser.content_liepin(response, database, url)
                         continue
                     if web_name == 'zhilian':
                         self.parser.content_zhilian(response, database, url)
                     if web_name == 'qiancheng':
                         self.parser.content_qiancheng(response, database, url)
-                    if web_name == 'leipin':
+                    if web_name == 'liepin':
                         self.parser.content_liepin(response, database, url)
                 except Exception as e:
                     print('request_job_contain error : {}'.format(e))
@@ -130,6 +130,7 @@ class JobSpider(object):
     def _get_list(self, begin_url, city, keyword, page_weight=1, page_begin=0, web_name=None):
         url_list = []
         for page in range(1000):
+            urls = []
             try:
                 u = begin_url.format(page=page * page_weight + page_begin, city=city, keyword=keyword)
                 response = requests.get(begin_url.format(page=page * page_weight + page_begin, city=city, keyword=keyword), headers=headers)
@@ -158,7 +159,7 @@ class JobSpider(object):
                         urls = self.parser.list_zhilian(response)
                     if web_name == 'qiancheng':
                         urls = self.parser.list_qiancheng(response)
-                    if web_name == 'leipin':
+                    if web_name == 'liepin':
                         urls = self.parser.list_liepin(response)
 
                 if urls == (None or []):
@@ -175,22 +176,22 @@ if __name__ == '__main__':
 
     #cities = {'北京': '530', '深圳': '765', '上海': '538', '广州': '763', '成都': '801', '西安': '854', '重庆': '551', '杭州': '653'}
 
-    #cities = {'北京': '010000', '深圳': '040000', '上海': '020000', '广州': '030200', '成都': '090200', '西安': '200200',
-    #         '重庆': '060000', '杭州': '080200'}
+    cities = {'北京': '010000', '深圳': '040000', '上海': '020000', '广州': '030200', '成都': '090200', '西安': '200200',
+             '重庆': '060000', '杭州': '080200'}
 
-    cities = {'北京': 'bj', '深圳': 'sz', '上海': 'sh', '广州': 'gz', '成都': 'cd', '西安': 'xian',
-             '重庆': 'cq', '杭州': 'hz'}
+    #cities = {'北京': 'bj', '深圳': 'sz', '上海': 'sh', '广州': 'gz', '成都': 'cd', '西安': 'xian',
+             #'重庆': 'cq', '杭州': 'hz'}
 
     keywords_dict = {'机器学习': 'machine_learning', '数据挖掘': 'data_mining', '知识图谱': 'knowledge_graph', '推荐系统': 'recommended_system',
      '深度学习': 'deep_learninig', '算法工程师': 'algorithm_engineer', '前端': 'front_end', '后端': 'rear_end', 'Java': 'java',
      'Python': 'python', '产品经理': 'product_manager', '数字产品经理': 'digital_product_manager'}
 
-    test = JobSpider(keywords_dict, 'kl')
+    test = JobSpider(keywords_dict, 'qiancheng')
 
     for keyword in keywords:
 
         for city in cities.values():
-            test.crawl_leipin(city, keyword)
+            test.crawl_qiancheng(city, keyword)
 
         print(keyword, ' done!')
         time.sleep(60)

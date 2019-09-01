@@ -37,6 +37,7 @@ class WebParser(object):
         response.encoding = response.apparent_encoding
         selector = Selector(response, type='html')
         list = selector.xpath('//div[@class="el"]/p/span/a/@href').getall()
+        urls = self._filter_list(list)
         return urls
 
     def list_liepin(self, response):
@@ -81,12 +82,14 @@ class WebParser(object):
         selector = Selector(response)
         title = selector.xpath('//div[@class="cn"]/h1/text()').get()
         salary = selector.xpath('//div[@class="cn"]/strong/text()').get()
-        company = selector.xpath('//a[@class="com_name "]/p/text()').get()
-        company_url = selector.xpath('//a[@class="com_name "]/@href').get()
+        company = selector.xpath('//div[@class="com_msg"]/a/p/text()').get()
+        company_url = selector.xpath('//div[@class="com_msg"]/a/@href').get()
 
         # description 结构上比较混乱,先爬取再说
         description = selector.xpath('//div[@class="bmsg job_msg inbox"]').getall()
-        summary_info = city = selector.xpath('//p[@class="msg ltype"]/@title').get().split('\xa0\xa0|\xa0\xa0')
+        summary_info = city = selector.xpath('//p[@class="msg ltype"]/@title').get()
+        if summary_info:
+            summary_info = summary_info.split('\xa0\xa0|\xa0\xa0')
 
         if len(summary_info) >= 3:
             city = summary_info[0]
